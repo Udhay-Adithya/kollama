@@ -1,4 +1,4 @@
-package com.udhay.kollama.ui.theme
+package com.udhay.kollama.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
