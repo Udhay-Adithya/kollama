@@ -4,23 +4,103 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.udhay.kollama.R
+import com.udhay.kollama.feature.settings.presentation.components.SettingListItemHeader
+import com.udhay.kollama.feature.settings.presentation.components.SettingsListItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPage(
     modifier: Modifier = Modifier
 ) {
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Settings",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    Icon(painter = painterResource(R.drawable.arrow_back_ios_24px), contentDescription = "Back")
+                }
+
+            )
+        }
+
+    ) { paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "SettingsPage",
-                style = MaterialTheme.typography.headlineMedium
+            SettingListItemHeader(heading = "Profile")
+
+            SettingsListItem(
+                onTap = {},
+                title = "Account Settings",
+                leadingIcon = painterResource(R.drawable.person_24px),
+                isFirst = true,
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Data Control",
+                leadingIcon = painterResource(R.drawable.text_snippet_24px),
+                isLast = true,
+            )
+
+            SettingListItemHeader(heading = "App")
+
+            SettingsListItem(
+                onTap = {},
+                title = "Language",
+                leadingIcon = painterResource(R.drawable.language_24px),
+                isFirst = true,
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Dark Mode",
+                leadingIcon = painterResource(R.drawable.moon_stars_24px),
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Font Size",
+                leadingIcon = painterResource(R.drawable.format_size_24px),
+                isLast = true,
+            )
+
+            SettingListItemHeader(heading = "About")
+            SettingsListItem(
+                onTap = {},
+                title = "Check for updates",
+                leadingIcon = painterResource(R.drawable.info_24px),
+                isFirst = true,
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Service agreement",
+                leadingIcon = painterResource(R.drawable.docs_24px),
+                isLast = true,
+            )
+
+            SettingListItemHeader()
+
+            SettingsListItem(
+                onTap = {},
+                title = "Help & Feedback",
+                leadingIcon = painterResource(R.drawable.help_24px),
+                isFirst = true,
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Logout",
+                leadingIcon = painterResource(R.drawable.logout_24px),
+                isLast = true,
             )
         }
     }
