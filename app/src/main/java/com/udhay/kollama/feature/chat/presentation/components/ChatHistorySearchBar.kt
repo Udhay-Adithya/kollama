@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.isTraversalGroup
@@ -67,6 +68,7 @@ fun ChatHistorySearchBar(
                         onSearch(textFieldState.text.toString())
                         expanded = false
                     },
+                    modifier = Modifier.focusProperties { canFocus = false },
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
                     placeholder = { Text("Search") }
