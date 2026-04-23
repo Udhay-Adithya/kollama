@@ -43,7 +43,9 @@ fun AppNavHost() {
                 }
 
                 is Routes.Settings -> NavEntry(key) {
-                    SettingsPage()
+                    SettingsPage(
+                        onNavigateBack = { popBack() }
+                    )
                 }
 
 //                else -> NavEntry(Unit) { Text("Unknown route") }

@@ -1,7 +1,15 @@
 package com.udhay.kollama.feature.settings.presentation.screen
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -14,7 +22,8 @@ import com.udhay.kollama.feature.settings.presentation.components.SettingsListIt
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -26,7 +35,12 @@ fun SettingsPage(
                     )
                 },
                 navigationIcon = {
-                    Icon(painter = painterResource(R.drawable.arrow_back_ios_24px), contentDescription = "Back")
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_back_ios_24px),
+                        contentDescription = "Back",
+                        modifier = Modifier.clickable {
+                            onNavigateBack()
+                        })
                 }
 
             )
@@ -110,6 +124,8 @@ fun SettingsPage(
 @Composable
 private fun SettingsPagePreview() {
     MaterialTheme {
-        SettingsPage()
+        SettingsPage(
+            onNavigateBack = {}
+        )
     }
 }
