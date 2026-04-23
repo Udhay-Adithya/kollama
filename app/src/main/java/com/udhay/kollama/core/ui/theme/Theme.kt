@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 
@@ -24,6 +25,7 @@ fun KollamaTheme(
             seedColor = seedColor,
             isDark = darkTheme,
             isAmoled = isAmoled,
+            style = PaletteStyle.Fidelity,
             specVersion = ColorSpec.SpecVersion.SPEC_2025,
         )
 
