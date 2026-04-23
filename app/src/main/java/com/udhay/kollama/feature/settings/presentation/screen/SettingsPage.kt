@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,12 +36,15 @@ fun SettingsPage(
                     )
                 },
                 navigationIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_24px),
-                        contentDescription = "Back",
-                        modifier = Modifier.clickable {
-                            onNavigateBack()
-                        })
+                    IconButton(
+                        onClick = { onNavigateBack() }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_back_ios_24px),
+                            contentDescription = "Back"
+                        )
+                    }
+
                 }
 
             )
