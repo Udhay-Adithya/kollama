@@ -16,7 +16,12 @@ import com.udhay.kollama.feature.settings.presentation.screen.SettingsPage
 import kotlinx.coroutines.launch
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(
+    isDarkTheme:() -> Boolean,
+    onToggleDarkTheme: (Boolean) -> Unit,
+    isAmoled: () -> Boolean,
+    onToggleAmoled: (Boolean) -> Unit
+) {
     val backStack: SnapshotStateList<Routes> = remember { mutableStateListOf<Routes>(
         Routes.Chat
     ) }
@@ -44,7 +49,11 @@ fun AppNavHost() {
 
                 is Routes.Settings -> NavEntry(key) {
                     SettingsPage(
-                        onNavigateBack = { popBack() }
+                        onNavigateBack = { popBack() },
+                        isDarkTheme = isDarkTheme(),
+                        onToggleDarkTheme = onToggleDarkTheme,
+                        isAmoled = isAmoled(),
+                        onToggleAmoled = onToggleAmoled
                     )
                 }
 

@@ -24,7 +24,12 @@ fun SettingsListItem(
     isLast: Boolean = false,
     onTap: () -> Unit,
     leadingIcon: Painter,
-    trailingIcon: Painter = painterResource(R.drawable.chevron_right_24px),
+    trailingIcon: (@Composable () -> Unit)? = {
+        Icon(
+            painter = painterResource(R.drawable.chevron_right_24px),
+            contentDescription = null
+        )
+    }
 ) {
     val shape = RoundedCornerShape(
         topStart = if (isFirst) 12.dp else 0.dp,
@@ -35,12 +40,7 @@ fun SettingsListItem(
 
     ListItem(
         leadingContent = { Icon(painter = leadingIcon, contentDescription = null) },
-        trailingContent = {
-            Icon(
-                painter = trailingIcon,
-                contentDescription = null
-            )
-        },
+        trailingContent = trailingIcon,
         colors = ListItemDefaults.colors()
             .copy(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         modifier = modifier

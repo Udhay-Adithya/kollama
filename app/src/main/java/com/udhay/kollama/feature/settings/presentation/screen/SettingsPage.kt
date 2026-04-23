@@ -1,6 +1,5 @@
 package com.udhay.kollama.feature.settings.presentation.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.udhay.kollama.R
+import com.udhay.kollama.core.ui.theme.KollamaTheme
 import com.udhay.kollama.feature.settings.presentation.components.SettingListItemHeader
 import com.udhay.kollama.feature.settings.presentation.components.SettingsListItem
 
@@ -25,6 +26,10 @@ import com.udhay.kollama.feature.settings.presentation.components.SettingsListIt
 fun SettingsPage(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
+    isDarkTheme: Boolean,
+    onToggleDarkTheme: (Boolean) -> Unit,
+    isAmoled: Boolean,
+    onToggleAmoled: (Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -84,6 +89,15 @@ fun SettingsPage(
                 onTap = {},
                 title = "Dark Mode",
                 leadingIcon = painterResource(R.drawable.moon_stars_24px),
+                trailingIcon = { Switch(checked = isDarkTheme,
+                    onCheckedChange = onToggleDarkTheme) }
+            )
+            SettingsListItem(
+                onTap = {},
+                title = "Amoled Palette",
+                leadingIcon = painterResource(R.drawable.web_24px),
+                trailingIcon = { Switch(checked = isAmoled,
+                    onCheckedChange = onToggleAmoled) }
             )
             SettingsListItem(
                 onTap = {},
@@ -127,9 +141,15 @@ fun SettingsPage(
 @Preview(showBackground = true)
 @Composable
 private fun SettingsPagePreview() {
-    MaterialTheme {
+    KollamaTheme(
+        darkTheme = false
+    ) {
         SettingsPage(
-            onNavigateBack = {}
+            onNavigateBack = {},
+            isDarkTheme = false,
+            onToggleDarkTheme = {  },
+            isAmoled = false,
+            onToggleAmoled = {}
         )
     }
 }
