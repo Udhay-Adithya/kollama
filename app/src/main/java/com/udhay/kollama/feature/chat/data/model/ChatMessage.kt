@@ -1,4 +1,4 @@
-package com.udhay.kollama.feature.settings.data.model
+package com.udhay.kollama.feature.chat.data.model
 
 data class ChatMessage(
     val text: String,

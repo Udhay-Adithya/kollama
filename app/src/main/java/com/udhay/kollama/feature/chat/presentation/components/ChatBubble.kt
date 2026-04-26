@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.udhay.kollama.feature.settings.data.model.ChatMessage
+import com.udhay.kollama.feature.chat.data.model.ChatMessage
 
 @Composable
 fun ChatBubble(message: ChatMessage) {

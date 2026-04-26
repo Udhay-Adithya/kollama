@@ -39,7 +39,7 @@ import com.udhay.kollama.feature.chat.presentation.components.ChatDrawer
 import com.udhay.kollama.feature.chat.presentation.components.WelcomeScreen
 import com.udhay.kollama.feature.chat.presentation.components.ChatBubble
 import com.udhay.kollama.feature.chat.presentation.components.ChatInputBar
-import com.udhay.kollama.feature.settings.data.model.ChatMessage
+import com.udhay.kollama.feature.chat.data.model.ChatMessage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
