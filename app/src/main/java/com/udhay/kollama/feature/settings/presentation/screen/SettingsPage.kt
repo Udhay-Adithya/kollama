@@ -12,25 +12,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.udhay.kollama.R
 import com.udhay.kollama.core.ui.theme.KollamaTheme
 import com.udhay.kollama.feature.settings.presentation.components.SettingListItemHeader
 import com.udhay.kollama.feature.settings.presentation.components.SettingsListItem
+import com.udhay.kollama.feature.settings.presentation.viewmodel.UserSettingsViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPage(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
-    isDarkTheme: Boolean,
-    onToggleDarkTheme: (Boolean) -> Unit,
-    isAmoled: Boolean,
-    onToggleAmoled: (Boolean) -> Unit
+    viewModel: UserSettingsViewModel = koinViewModel()
+
 ) {
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -89,15 +93,26 @@ fun SettingsPage(
                 onTap = {},
                 title = "Dark Mode",
                 leadingIcon = painterResource(R.drawable.moon_stars_24px),
-                trailingIcon = { Switch(checked = isDarkTheme,
-                    onCheckedChange = onToggleDarkTheme) }
+                trailingIcon = {
+                    Switch(
+                        checked = settings.darkModeEnabled,
+                        onCheckedChange = { isChecked ->
+                            viewModel.save(settings.copy(darkModeEnabled = isChecked))
+                        })
+                }
             )
             SettingsListItem(
                 onTap = {},
                 title = "Amoled Palette",
                 leadingIcon = painterResource(R.drawable.web_24px),
-                trailingIcon = { Switch(checked = isAmoled,
-                    onCheckedChange = onToggleAmoled) }
+                trailingIcon = {
+                    Switch(
+                        checked = settings.amoledPaletteEnabled,
+                        onCheckedChange = { isChecked ->
+                            viewModel.save(settings.copy(amoledPaletteEnabled = isChecked))
+                        }
+                    )
+                }
             )
             SettingsListItem(
                 onTap = {},
@@ -146,10 +161,6 @@ private fun SettingsPagePreview() {
     ) {
         SettingsPage(
             onNavigateBack = {},
-            isDarkTheme = false,
-            onToggleDarkTheme = {  },
-            isAmoled = false,
-            onToggleAmoled = {}
         )
     }
 }
