@@ -4,16 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.udhay.kollama.core.ui.navigation.AppNavHost
 import com.udhay.kollama.core.ui.theme.KollamaTheme
 import com.udhay.kollama.feature.settings.presentation.viewmodel.UserSettingsViewModel
-import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -25,11 +22,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+            val isDark = settings.darkModeEnabled
 
             KollamaTheme(
-                darkTheme = settings.darkModeEnabled,
+                darkTheme = isDark,
                 isAmoled = settings.amoledPaletteEnabled
             ) {
+                val view = this@MainActivity.window.decorView
+
+                SideEffect {
+                    val window = this@MainActivity.window
+                    val controller = WindowCompat.getInsetsController(window, view)
+                    controller.isAppearanceLightStatusBars = !isDark
+                }
+
                 AppNavHost()
             }
         }
