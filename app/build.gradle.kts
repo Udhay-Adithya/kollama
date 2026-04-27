@@ -79,4 +79,7 @@ dependencies {
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.koin.annotations)
 
+    //ollama-kotlin
+    implementation(libs.ollama.kotlin)
+
 }
