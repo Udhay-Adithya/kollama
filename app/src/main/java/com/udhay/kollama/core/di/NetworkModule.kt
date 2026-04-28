@@ -10,7 +10,9 @@ class NetworkModule {
 
     @Single
     fun provideOllamaClientConfig(): OllamaClientConfig {
-        return OllamaClientConfig()
+        return OllamaClientConfig(
+            host = "http://10.195.189.53:11434"
+        )
     }
 
     @Single
