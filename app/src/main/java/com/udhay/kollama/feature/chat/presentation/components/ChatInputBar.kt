@@ -2,8 +2,10 @@ package com.udhay.kollama.feature.chat.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -65,7 +67,6 @@ fun ChatInputBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {}) {
@@ -76,7 +77,12 @@ fun ChatInputBar(
                     )
                 }
 
+                ModelSelectorBottomSheet()
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 val hasText = textFieldState.text.isNotEmpty()
+
                 IconButton(
                     onClick = onSend,
                     enabled = hasText,
