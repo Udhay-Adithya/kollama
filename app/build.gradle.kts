@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     alias(libs.plugins.koin.compiler)
+    kotlin("plugin.serialization") version "2.3.21"
 }
 
 android {
