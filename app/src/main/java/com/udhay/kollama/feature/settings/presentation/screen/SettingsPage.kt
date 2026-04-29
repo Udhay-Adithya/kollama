@@ -30,8 +30,9 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SettingsPage(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
+    onNavigateToPersonalization: () -> Unit,
+    onNavigateToConnectionSettings: () -> Unit,
     viewModel: UserSettingsViewModel = koinViewModel()
-
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
@@ -66,11 +67,11 @@ fun SettingsPage(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            SettingListItemHeader(heading = "Profile")
+            SettingListItemHeader(heading = "General")
 
             SettingsListItem(
-                onTap = {},
-                title = "Account Settings",
+                onTap = onNavigateToPersonalization,
+                title = "Personalization",
                 leadingIcon = painterResource(R.drawable.person_24px),
                 isFirst = true,
             )
@@ -78,6 +79,11 @@ fun SettingsPage(
                 onTap = {},
                 title = "Data Control",
                 leadingIcon = painterResource(R.drawable.text_snippet_24px),
+            )
+            SettingsListItem(
+                onTap = onNavigateToConnectionSettings,
+                title = "Connection Settings",
+                leadingIcon = painterResource(R.drawable.settings_24px),
                 isLast = true,
             )
 
@@ -130,23 +136,8 @@ fun SettingsPage(
             )
             SettingsListItem(
                 onTap = {},
-                title = "Service agreement",
-                leadingIcon = painterResource(R.drawable.docs_24px),
-                isLast = true,
-            )
-
-            SettingListItemHeader()
-
-            SettingsListItem(
-                onTap = {},
                 title = "Help & Feedback",
                 leadingIcon = painterResource(R.drawable.help_24px),
-                isFirst = true,
-            )
-            SettingsListItem(
-                onTap = {},
-                title = "Logout",
-                leadingIcon = painterResource(R.drawable.logout_24px),
                 isLast = true,
             )
         }
@@ -161,6 +152,8 @@ private fun SettingsPagePreview() {
     ) {
         SettingsPage(
             onNavigateBack = {},
+            onNavigateToPersonalization = {},
+            onNavigateToConnectionSettings = {}
         )
     }
 }

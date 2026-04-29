@@ -18,6 +18,8 @@ class ModelsViewModel(
 
     val models: StateFlow<List<OllamaModel>> = _models
 
+    private var _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
     init {
         getModels()
@@ -25,7 +27,16 @@ class ModelsViewModel(
 
     fun getModels() {
         viewModelScope.launch {
-            _models.value = getModelsUseCase()
+            _error.value = null
+            try {
+                val result = getModelsUseCase()
+                _models.value = result
+                if (result.isEmpty()) {
+                    _error.value = "No models found or connection issue"
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to connect to Ollama server"
+            }
         }
     }
 }

@@ -10,8 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,27 +24,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.udhay.kollama.R
 import com.udhay.kollama.core.utils.formatDate
 import com.udhay.kollama.core.utils.formatFileSize
 import com.udhay.kollama.core.utils.prettyPrintJson
 import com.udhay.kollama.feature.chat.domain.model.OllamaModel
 import com.udhay.kollama.feature.chat.presentation.viewmodel.ModelsViewModel
+import com.udhay.kollama.feature.settings.presentation.viewmodel.UserSettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelSelectorBottomSheet(
     modifier: Modifier = Modifier,
-    viewModel: ModelsViewModel = koinViewModel()
+    viewModel: ModelsViewModel = koinViewModel(),
+    settingsViewModel: UserSettingsViewModel = koinViewModel()
 ) {
     val models: List<OllamaModel> by viewModel.models.collectAsStateWithLifecycle()
+    val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+    val error by viewModel.error.collectAsStateWithLifecycle()
 
-    var selectedModel by remember { mutableStateOf<String?>(null) }
     var showSheet by remember { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -56,7 +55,7 @@ fun ModelSelectorBottomSheet(
         colors = ButtonDefaults.textButtonColors()
             .copy(MaterialTheme.colorScheme.surfaceContainerHighest)
     ) {
-        Text(text = selectedModel ?: "Model")
+        Text(text = settings.selectedModel?.name ?: "Model")
     }
 
     if (showSheet) {
@@ -68,6 +67,15 @@ fun ModelSelectorBottomSheet(
                 "Available Models", style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+            
+            if (error != null && models.isEmpty()) {
+                Text(
+                    text = error!!,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,7 +119,7 @@ fun ModelSelectorBottomSheet(
                             .fillMaxWidth()
                             .clip(shape = RoundedCornerShape(12.dp))
                             .clickable {
-                                selectedModel = model.name
+                                settingsViewModel.save(settings.copy(selectedModel = model))
                                 showSheet = false
                             }
                     )
