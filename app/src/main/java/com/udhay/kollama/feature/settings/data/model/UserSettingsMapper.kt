@@ -8,7 +8,10 @@ fun UserSettingsEntity.toDomain() = UserSettings(
     occupation = occupation,
     personalPreferences = personalPreferences,
     darkModeEnabled = darkModeEnabled,
-    amoledPaletteEnabled = amoledPaletteEnabled
+    amoledPaletteEnabled = amoledPaletteEnabled,
+    selectedModel = selectedModel,
+    serverHost = serverHost,
+    serverHeaders = serverHeaders
 )
 
 fun UserSettings.toEntity() = UserSettingsEntity(
@@ -18,5 +21,8 @@ fun UserSettings.toEntity() = UserSettingsEntity(
     personalPreferences = personalPreferences,
     darkModeEnabled = darkModeEnabled,
     amoledPaletteEnabled = amoledPaletteEnabled,
+    selectedModel = selectedModel,
+    serverHost = serverHost,
+    serverHeaders = serverHeaders,
     updatedAt = System.currentTimeMillis()
 )

@@ -7,9 +7,15 @@ import org.koin.core.annotation.Single
 import org.udhay.ollama.OllamaClient
 
 @Single
-class ModelsRepositoryImpl(private val ollamaClient: OllamaClient) : ModelsRepository {
+class ModelsRepositoryImpl(
+    private val ollamaClient: OllamaClient
+) : ModelsRepository {
     override suspend fun getModels(): List<OllamaModel> {
-        val response = ollamaClient.list()
-        return response.models.map { it.toDomain() }
+        return try {
+            val response = ollamaClient.list()
+            response.models.map { it.toDomain() }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }
