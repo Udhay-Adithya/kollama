@@ -2,8 +2,8 @@ package com.udhay.kollama.feature.chat.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.udhay.kollama.feature.chat.domain.model.OllamaModel
 import com.udhay.kollama.feature.chat.domain.usecase.GetModelsUseCase
+import com.udhay.kollama.feature.chat.presentation.state.ModelsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -13,13 +13,9 @@ import org.koin.core.annotation.KoinViewModel
 class ModelsViewModel(
     private val getModelsUseCase: GetModelsUseCase
 ) : ViewModel() {
-    private var _models = MutableStateFlow<
-            List<OllamaModel>>(emptyList())
 
-    val models: StateFlow<List<OllamaModel>> = _models
-
-    private var _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
+    private val _uiState = MutableStateFlow<ModelsUiState>(ModelsUiState.Loading)
+    val uiState: StateFlow<ModelsUiState> = _uiState
 
     init {
         getModels()
@@ -27,15 +23,18 @@ class ModelsViewModel(
 
     fun getModels() {
         viewModelScope.launch {
-            _error.value = null
+            _uiState.value = ModelsUiState.Loading
+
             try {
                 val result = getModelsUseCase()
-                _models.value = result
+
                 if (result.isEmpty()) {
-                    _error.value = "No models found or connection issue"
+                    _uiState.value = ModelsUiState.Error("No models found or connection issue")
+                } else {
+                    _uiState.value = ModelsUiState.Success(result)
                 }
             } catch (e: Exception) {
-                _error.value = "Failed to connect to Ollama server"
+                _uiState.value = ModelsUiState.Error("Failed to connect to Ollama server")
             }
         }
     }
