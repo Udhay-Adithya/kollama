@@ -10,16 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.udhay.kollama.R
+import com.udhay.kollama.core.ui.common.AppTextField
 import com.udhay.kollama.feature.settings.presentation.viewmodel.UserSettingsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -42,6 +41,15 @@ fun ConnectionSettingsPage(
     viewModel: UserSettingsViewModel = koinViewModel()
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
+
+    var host by remember(settings.serverHost) {
+        mutableStateOf(settings.serverHost)
+    }
+    // Header Input Section
+    var newKey by remember { mutableStateOf("") }
+    var newValue by remember { mutableStateOf("") }
+
+    val hasChanges = host != settings.serverHost
 
     Scaffold(
         topBar = {
@@ -59,6 +67,16 @@ fun ConnectionSettingsPage(
                             contentDescription = "Back"
                         )
                     }
+                },
+                actions = {
+                    TextButton(
+                        onClick = {
+                            viewModel.save(settings.copy(serverHost = host))
+                        },
+                        enabled = hasChanges
+                    ) {
+                        Text("Save")
+                    }
                 }
             )
         }
@@ -71,23 +89,18 @@ fun ConnectionSettingsPage(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Server Configuration",
+                text = "Host URL",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            OutlinedTextField(
-                value = settings.serverHost,
-                onValueChange = { viewModel.save(settings.copy(serverHost = it)) },
-                label = { Text("Host URL") },
-                placeholder = { Text("http://192.168.1.100:11434") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+            AppTextField(
+                value = host,
+                onValueChange = { host = it },
+                placeholder = "http://192.168.1.100:11434",
+                modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
-            HorizontalDivider()
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
@@ -97,28 +110,23 @@ fun ConnectionSettingsPage(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Header Input Section
-            var newKey by remember { mutableStateOf("") }
-            var newValue by remember { mutableStateOf("") }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedTextField(
+                AppTextField(
                     value = newKey,
                     onValueChange = { newKey = it },
-                    label = { Text("Key") },
                     modifier = Modifier.weight(1f),
-                    singleLine = true
+                    placeholder = "Key"
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                OutlinedTextField(
+
+                AppTextField(
                     value = newValue,
                     onValueChange = { newValue = it },
-                    label = { Text("Value") },
                     modifier = Modifier.weight(1f),
-                    singleLine = true
+                    placeholder = "Value"
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
@@ -132,11 +140,24 @@ fun ConnectionSettingsPage(
                         }
                     }
                 ) {
-                    Icon(painter = painterResource(R.drawable.add_24px), contentDescription = "Add Header")
+                    Icon(
+                        painter = painterResource(R.drawable.add_24px),
+                        contentDescription = "Add Header"
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            if (settings.serverHeaders.isNotEmpty()) {
+                Text(
+                    text = "Active Headers",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
 
             // Display Existing Headers
             settings.serverHeaders.forEach { (key, value) ->
@@ -147,8 +168,16 @@ fun ConnectionSettingsPage(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = key, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
-                        Text(text = value, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            text = key,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = value,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                     IconButton(
                         onClick = {
@@ -157,11 +186,14 @@ fun ConnectionSettingsPage(
                             viewModel.save(settings.copy(serverHeaders = updatedHeaders))
                         }
                     ) {
-                        Icon(painter = painterResource(R.drawable.close_24px), contentDescription = "Remove Header")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            contentDescription = "Remove Header"
+                        )
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

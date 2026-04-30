@@ -10,20 +10,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.udhay.kollama.R
+import com.udhay.kollama.core.ui.common.AppTextField
 import com.udhay.kollama.feature.chat.presentation.components.ModelSelectorBottomSheet
 import com.udhay.kollama.feature.settings.presentation.viewmodel.UserSettingsViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -36,6 +39,23 @@ fun PersonalizationPage(
     viewModel: UserSettingsViewModel = koinViewModel()
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
+
+    var username by remember(settings.username) {
+        mutableStateOf(settings.username)
+    }
+
+    var occupation by remember(settings.occupation) {
+        mutableStateOf(settings.occupation)
+    }
+
+    var preferences by remember(settings.personalPreferences) {
+        mutableStateOf(settings.personalPreferences)
+    }
+
+    val hasChanges =
+        username != settings.username ||
+                occupation != settings.occupation ||
+                preferences != settings.personalPreferences
 
     Scaffold(
         topBar = {
@@ -53,6 +73,22 @@ fun PersonalizationPage(
                             contentDescription = "Back"
                         )
                     }
+                },
+                actions = {
+                    TextButton(
+                        onClick = {
+                            viewModel.save(
+                                settings.copy(
+                                    username = username,
+                                    occupation = occupation,
+                                    personalPreferences = preferences
+                                )
+                            )
+                        },
+                        enabled = hasChanges
+                    ) {
+                        Text("Save")
+                    }
                 }
             )
         }
@@ -65,59 +101,65 @@ fun PersonalizationPage(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Personal Info",
+                text = "Name",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            OutlinedTextField(
-                value = settings.username,
-                onValueChange = { viewModel.save(settings.copy(username = it)) },
-                label = { Text("Name") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+            AppTextField(
+                value = username,
+                onValueChange = { username = it },
+                placeholder = "Name",
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = settings.occupation,
-                onValueChange = { viewModel.save(settings.copy(occupation = it)) },
-                label = { Text("Occupation") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-            HorizontalDivider()
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "AI Preferences",
+                text = "Occupation",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            OutlinedTextField(
-                value = settings.personalPreferences,
-                onValueChange = { viewModel.save(settings.copy(personalPreferences = it)) },
-                label = { Text("Instructions for AI") },
-                placeholder = { Text("e.g., I prefer concise answers") },
+            AppTextField(
+                value = occupation,
+                onValueChange = { occupation = it },
+                placeholder = "Occupation",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Preferences",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            AppTextField(
+                value = preferences,
+                onValueChange = { preferences = it },
+                placeholder = "e.g., I prefer concise answers",
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 3
+                singleLine = false,
+                minLines = 5,
+                borderRadius = 18.dp
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Default Model",
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
+
             ModelSelectorBottomSheet()
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
